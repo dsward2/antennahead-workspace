@@ -1,0 +1,6 @@
+# name                    url                                                    ref
+AntennaHead                https://github.com/dsward2/AntennaHead.git             main
+LiveAudioServer             https://github.com/dsward2/LiveAudioServer.git         main
+ControlBooth                https://github.com/dsward2/ControlBooth.git            main
+PipelineHelpers             https://github.com/dsward2/PipelineHelpers.git         main
+antennahead-librtlsdr       https://github.com/dsward2/antennahead-librtlsdr.git   main
