@@ -5,3 +5,4 @@ ControlBooth                https://github.com/dsward2/ControlBooth.git         
 PipelineHelpers             https://github.com/dsward2/PipelineHelpers.git         main
 antennahead-librtlsdr       https://github.com/dsward2/antennahead-librtlsdr.git   main
 SharedLogging               https://github.com/dsward2/SharedLogging.git           main
+AirPlayReceiver             https://github.com/dsward2/AirPlayReceiver.git         main
