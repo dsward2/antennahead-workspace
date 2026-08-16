@@ -7,3 +7,4 @@ antennahead-librtlsdr       https://github.com/dsward2/antennahead-librtlsdr.git
 SharedLogging               https://github.com/dsward2/SharedLogging.git           main
 AirPlayReceiver             https://github.com/dsward2/AirPlayReceiver.git         main
 AntennaHeadAPI               https://github.com/dsward2/AntennaHeadAPI.git          main
+AntennaHeadTV                https://github.com/dsward2/AntennaHeadTV.git           main

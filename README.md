@@ -14,6 +14,7 @@ with its own history, issues, and PRs.
 - [AirPlayReceiver](https://github.com/dsward2/AirPlayReceiver) — shared AirPlay 1 (RAOP) audio-receiver package used by AntennaHead and ControlBooth
 - [antennahead-librtlsdr](https://github.com/dsward2/antennahead-librtlsdr) — librtlsdr build/vendoring for AntennaHead
 - [AntennaHeadAPI](https://github.com/dsward2/AntennaHeadAPI) — Codable JSON-API contract types shared between AntennaHead's HTTP server and future non-WebKit clients (tvOS, watchOS)
+- [AntennaHeadTV](https://github.com/dsward2/AntennaHeadTV) — tvOS SwiftUI client for AntennaHead's `/api/v1/...` API
 
 ## Setup
 
