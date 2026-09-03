@@ -16,6 +16,14 @@ with its own history, issues, and PRs.
 - [AntennaHeadAPI](https://github.com/dsward2/AntennaHeadAPI) — Codable JSON-API contract types shared between AntennaHead's HTTP server and future non-WebKit clients (tvOS, watchOS)
 - [AntennaHeadTV](https://github.com/dsward2/AntennaHeadTV) — tvOS SwiftUI client for AntennaHead's `/api/v1/...` API
 
+## Design docs
+
+- [PIPELINE_HANDOFF_SPEC.md](PIPELINE_HANDOFF_SPEC.md) — draft: App Group
+  file-drop by which AntennaHead hands a pipeline definition to ControlBooth
+  for import/run, as the two apps divide labor (AntennaHead sandboxed with
+  fixed pipelines; ControlBooth unsandboxed as the sole custom-pipeline
+  editor). Not yet implemented.
+
 ## Setup
 
 ```bash
