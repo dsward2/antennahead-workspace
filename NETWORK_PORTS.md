@@ -23,6 +23,8 @@ intended to be LAN-reachable.
 | 6024 | UDP | AntennaHead → its optional spatial-audio `PCMDistanceGain` stage — live `dist <value>` updates from the Now Playing distance slider | No — fixed constant, not in Configuration UI | `AntennaHead/Services/SDRController.swift` (`spatialGainControlPort`), `PipelineHelpers/Sources/PCMDistanceGain/main.swift` |
 | 6025 | UDP | AntennaHead → its optional spatial-audio `PCMBinauralPanner` stage — live `pos <az> <el>` / `dist <value>` updates from the Now Playing direction pad | No — fixed constant, not in Configuration UI | `AntennaHead/Services/SDRController.swift` (`binauralControlPort`), `PipelineHelpers/Sources/PCMBinauralPanner/main.swift` |
 | 6026 | UDP | AntennaHead → the filler pipeline's own `PCMDistanceGain` stage — `dist <value>` ramps that fade the Monitor Beacon (or user filler) in on start and out when a real source is selected | No — fixed constant, not in Configuration UI | `AntennaHead/Services/SDRController.swift` (`fillerControlPort`), `PipelineHelpers/Sources/PCMDistanceGain/main.swift` |
+| 6027 | UDP | Filler-announcement feeder (`PCMSpeechSynth → sox → PCMUDPSender`) → the filler `PCMMixer`'s input 1 — 48 kHz/2 ch S16LE of the periodic spoken announcement, which drives the mixer's sidechain ducking of the filler bed | No — fixed constant, not in Configuration UI | `AntennaHead/Services/SDRController.swift` (`fillerAnnouncePCMPort`), `PipelineHelpers/Sources/PCMMixer/main.swift` |
+| 6028 | UDP | AntennaHead → the filler `PCMMixer`'s control port — `gain` / `ratio` and (unused at rest) duck retuning; the duck parameters are passed as `--duck-*` args at launch | No — fixed constant, not in Configuration UI | `AntennaHead/Services/SDRController.swift` (`fillerMixerControlPort`), `PipelineHelpers/Sources/PCMMixer/main.swift` |
 | 8080 | TCP | LiveAudioServer HTTP stream (MP3/AAC/HLS) + status page | Yes (`-p/--port`) | `LiveAudioServerCore/Config.swift:58`; `AntennaHead/Services/LiveAudioServerProcessManager.swift:48`, `LiveAudioServerClient.swift:26` |
 | 8090 | TCP | AntennaHead's own web UI (HTTP), Bonjour-advertised as `_http._tcp` | Yes | `AntennaHead/Services/AntennaHeadHTTPServer.swift:19` |
 | 8094 | TCP | AntennaHead's own web UI (HTTPS/TLS), Bonjour-advertised as `_https._tcp` | Yes | `AntennaHead/Services/AntennaHeadHTTPServer.swift:20` |
@@ -52,6 +54,8 @@ intended to be LAN-reachable.
 | `PCMTranscriber` tap → AntennaHead caption listener (not yet built) | newline-delimited JSON | UDP 6023 |
 | AntennaHead Now Playing → spatial-audio `PCMDistanceGain` / `PCMBinauralPanner` stages | `dist` / `pos` ASCII lines | UDP 6024 / 6025 |
 | AntennaHead → filler `PCMDistanceGain` (fade in/out) | `dist` ASCII lines | UDP 6026 |
+| Filler-announcement feeder → filler `PCMMixer` input 1 (ducking sidechain) | S16LE 48 kHz/2 ch PCM | UDP 6027 |
+| AntennaHead → filler `PCMMixer` control | `gain` / `ratio` ASCII lines | UDP 6028 |
 | Browser/phone → AntennaHead web UI | HTTP/HTTPS, Bonjour `_http._tcp`/`_https._tcp` | TCP 8090 / 8094 |
 | Browser/phone → LiveAudioServer stream | HTTP/HTTPS, optional Bonjour (`_http._tcp`/`_https._tcp`, `_liveaudio-pcm` for inputs) | TCP 8080 / 8443 |
 | AirPlay sender (iPhone/Mac) → shairport-sync | RAOP/RTSP | TCP 5000 + dynamic RTP UDP |
@@ -69,8 +73,8 @@ intended to be LAN-reachable.
 - `AntennaHead/README.md`'s "Default Ports" table documents the configurable ports
   (8090/8094/8080/8443/6021/6020/6019). The fixed internal constants not exposed in the
   Configuration sheet are the speech-to-text caption feed (6023), the two spatial-audio
-  control ports (6024/6025), and the filler fade control (6026) — all loopback, both ends
-  owned by AntennaHead.
+  control ports (6024/6025), the filler fade control (6026), and the filler-announcement
+  audio/mixer-control pair (6027/6028) — all loopback, both ends owned by AntennaHead.
 - `rtl_fm_localradio_src/rtl_fm_localradio.m:2253` hardcoded `port = 6020` for the legacy
   Objective-C `retune_socket_thread_fn`'s own status socket to the predecessor "LocalRadio.app".
   On inspection this whole function (lines 2240–2479) is inside a `/* ... */` block comment, so
