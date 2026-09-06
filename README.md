@@ -30,6 +30,14 @@ with its own history, issues, and PRs.
   for import/run, as the two apps divide labor (AntennaHead sandboxed with
   fixed pipelines; ControlBooth unsandboxed as the sole custom-pipeline
   editor). Not yet implemented.
+- [AntennaHead/Docs/FILLER_ANNOUNCEMENTS_FEASIBILITY.md](https://github.com/dsward2/AntennaHead/blob/main/Docs/FILLER_ANNOUNCEMENTS_FEASIBILITY.md)
+  — feasibility study for layering a periodic spoken announcement over the
+  idle filler audio, ducked underneath. Implemented: `PCMMixer` gained a
+  `--duck-input` sidechain ducker (PipelineHelpers) and AntennaHead runs a
+  `PCMSpeechSynth → sox → PCMUDPSender` feeder into the filler mixer, off by
+  default, configured in **Configuration ▸ Filler Announcements**. Uses
+  loopback UDP ports 6027 (announcement PCM) and 6028 (mixer control) — see
+  `NETWORK_PORTS.md`.
 
 ## Setup
 
