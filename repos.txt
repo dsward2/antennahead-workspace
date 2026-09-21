@@ -8,3 +8,4 @@ SharedLogging               https://github.com/dsward2/SharedLogging.git        
 AirPlayReceiver             https://github.com/dsward2/AirPlayReceiver.git         main
 AntennaHeadAPI               https://github.com/dsward2/AntennaHeadAPI.git          main
 AntennaHeadTV                https://github.com/dsward2/AntennaHeadTV.git           main
+AntennaHeadUninstaller       https://github.com/dsward2/AntennaHeadUninstaller.git  main
