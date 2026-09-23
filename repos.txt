@@ -9,3 +9,4 @@ AirPlayReceiver             https://github.com/dsward2/AirPlayReceiver.git      
 AntennaHeadAPI               https://github.com/dsward2/AntennaHeadAPI.git          main
 AntennaHeadTV                https://github.com/dsward2/AntennaHeadTV.git           main
 AntennaHeadUninstaller       https://github.com/dsward2/AntennaHeadUninstaller.git  main
+AntennaHeadiOS               https://github.com/dsward2/AntennaHeadiOS.git          main

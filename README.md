@@ -15,6 +15,7 @@ with its own history, issues, and PRs.
 - [antennahead-librtlsdr](https://github.com/dsward2/antennahead-librtlsdr) — librtlsdr build/vendoring for AntennaHead
 - [AntennaHeadAPI](https://github.com/dsward2/AntennaHeadAPI) — Codable JSON-API contract types shared between AntennaHead's HTTP server and future non-WebKit clients (tvOS, watchOS)
 - [AntennaHeadTV](https://github.com/dsward2/AntennaHeadTV) — tvOS SwiftUI client for AntennaHead's `/api/v1/...` API
+- [AntennaHeadiOS](https://github.com/dsward2/AntennaHeadiOS) — iPhone/iPad app: AntennaHead's web UI in a `WKWebView`, with native `AVPlayer` audio that resumes after interruptions
 - [AntennaHeadUninstaller](https://github.com/dsward2/AntennaHeadUninstaller) — small macOS app that moves AntennaHead, ControlBooth and their data to the Trash (Put Back works), for cleaning a Mac between test installs
 
 ## Reference docs
