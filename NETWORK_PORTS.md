@@ -29,6 +29,7 @@ intended to be LAN-reachable.
 | 6031 | UDP | StationDirector's `PCMUDPReceiver --fill-silence` — music bed from ControlBooth's AirPlay relay (set ControlBooth's AirPlay Destination Port to 6031) | Yes (`station.json` `ports.musicIn`) | `StationDirector/Sources/StationDirector/AudioGraph.swift`, `Config.swift` |
 | 6032 | UDP | StationDirector announcer → the station `PCMMixer`'s input 1 (ducking sidechain), 48 kHz/2 ch S16LE | Yes (`ports.announcerIn`) | `StationDirector/Sources/StationDirector/Announcer.swift` |
 | 6033 | UDP | StationDirector → the station `PCMMixer`'s control port (`gain 0 <g>` mutes/fades the music for clock segments) | Yes (`ports.mixerControl`) | `StationDirector/Sources/StationDirector/AudioGraph.swift` |
+| 6034 | UDP | ControlBooth's embedded AirPlay receiver → its `PCMUDPSender` stage's `--control-port` — live `relay on` / `relay off` / `relay?` for the Not in Use / Receiving / Receiving & Relayed modes. Bound on all interfaces (`INADDR_ANY`), but only ever sent to from loopback. Moved from 6029, which collided with `PCMDelay` (see notes) | No — fixed constant | `AirPlayReceiver/Sources/AirPlayReceiver/AirPlayReceiverController.swift` (`relayControlPort`), `PipelineHelpers/Sources/PCMUDPSender/main.swift` |
 | 8080 | TCP | LiveAudioServer HTTP stream (MP3/AAC/HLS) + status page | Yes (`-p/--port`) | `LiveAudioServerCore/Config.swift:58`; `AntennaHead/Services/LiveAudioServerProcessManager.swift:48`, `LiveAudioServerClient.swift:26` |
 | 8090 | TCP | AntennaHead's own web UI (HTTP), Bonjour-advertised as `_http._tcp` | Yes | `AntennaHead/Services/AntennaHeadHTTPServer.swift:19` |
 | 8094 | TCP | AntennaHead's own web UI (HTTPS/TLS), Bonjour-advertised as `_https._tcp` | Yes | `AntennaHead/Services/AntennaHeadHTTPServer.swift:20` |
@@ -64,6 +65,7 @@ intended to be LAN-reachable.
 | ControlBooth AirPlay relay → StationDirector music bed | S16LE 48 kHz/2 ch PCM | UDP 6031 |
 | StationDirector announcer → station `PCMMixer` input 1 | S16LE 48 kHz/2 ch PCM | UDP 6032 |
 | StationDirector → station `PCMMixer` control | `gain` ASCII lines | UDP 6033 |
+| ControlBooth AirPlay receiver → its `PCMUDPSender` stage (relay on/off) | `relay` ASCII lines | UDP 6034 |
 | Browser/phone → AntennaHead web UI | HTTP/HTTPS, Bonjour `_http._tcp`/`_https._tcp` | TCP 8090 / 8094 |
 | Browser/phone → LiveAudioServer stream | HTTP/HTTPS, optional Bonjour (`_http._tcp`/`_https._tcp`, `_liveaudio-pcm` for inputs) | TCP 8080 / 8443 |
 | AirPlay sender (iPhone/Mac) → shairport-sync | RAOP/RTSP | TCP 5000 + dynamic RTP UDP |
@@ -83,6 +85,16 @@ intended to be LAN-reachable.
   Configuration sheet are the speech-to-text caption feed (6023), the two spatial-audio
   control ports (6024/6025), the filler fade control (6026), and the filler-announcement
   audio/mixer-control pair (6027/6028) — all loopback, both ends owned by AntennaHead.
+- **Control ports must be unique across both apps.** The helper control listeners set
+  `SO_REUSEADDR` but not `SO_REUSEPORT`, and they don't all bind the same address:
+  `PCMDelay` binds `127.0.0.1`, `PCMUDPSender` binds `*`. On macOS two identical binds
+  fail with `EADDRINUSE` (the helper exits via `fail()`), but a wildcard bind plus a
+  loopback bind on the same port **both succeed**. Every datagram to `127.0.0.1:<port>`
+  then goes to the loopback socket, and the wildcard one hears nothing. Until 2026-09-27
+  ControlBooth's AirPlay relay control and AntennaHead's `PCMDelay` both used 6029. With an
+  audio delay on, ControlBooth's `relay on/off` commands silently went to `PCMDelay`, which
+  logged `control: ignoring 'relay …'`, so the AirPlay mode switch stopped taking effect.
+  The relay control moved to 6034. Pick the next unused number for any new control port.
 - `rtl_fm_localradio_src/rtl_fm_localradio.m:2253` hardcoded `port = 6020` for the legacy
   Objective-C `retune_socket_thread_fn`'s own status socket to the predecessor "LocalRadio.app".
   On inspection this whole function (lines 2240–2479) is inside a `/* ... */` block comment, so
