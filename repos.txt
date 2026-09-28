@@ -10,3 +10,4 @@ AntennaHeadAPI               https://github.com/dsward2/AntennaHeadAPI.git      
 AntennaHeadTV                https://github.com/dsward2/AntennaHeadTV.git           main
 AntennaHeadUninstaller       https://github.com/dsward2/AntennaHeadUninstaller.git  main
 AntennaHeadiOS               https://github.com/dsward2/AntennaHeadiOS.git          main
+StationDirector              https://github.com/dsward2/StationDirector.git         main

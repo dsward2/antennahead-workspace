@@ -1,6 +1,14 @@
 # AntennaHead Station Automation — design (first-hour prototype)
 
-Status: design only, nothing built yet. Written 2026-09-27.
+Status: written 2026-09-27. **The first-hour prototype is built and has been tested live**:
+[dsward2/StationDirector](https://github.com/dsward2/StationDirector), checked out at `StationDirector/` in the umbrella.
+Its README lists where the build departs from this design. The main differences:
+- The director runs the audio graph itself; there are no ControlBooth pipelines.
+- Lines are rendered ahead of time, so there's no long-running announcer stage and 6030 is unused.
+- ControlBooth stays in "Receiving" mode, and the director switches the relay itself.
+- **Segments never pause Music.** If an AirPlay stream to ControlBooth is paused
+  for more than a few seconds, shairport-sync keeps a dead session, so segments mute the
+  mixer and seek the track back to 0 instead of pausing.
 Author: Douglas S. Ward, with Claude.
 
 ## How to use this doc to start a session

@@ -17,6 +17,7 @@ with its own history, issues, and PRs.
 - [AntennaHeadTV](https://github.com/dsward2/AntennaHeadTV) — tvOS SwiftUI client for AntennaHead's `/api/v1/...` API
 - [AntennaHeadiOS](https://github.com/dsward2/AntennaHeadiOS) — iPhone/iPad app: AntennaHead's web UI in a `WKWebView`, with native `AVPlayer` audio that resumes after interruptions. Includes the Apple Watch companion app (Now Playing, favorites, categories, Stop, the other sources, and listening on Bluetooth headphones), which reaches the Mac directly or relays API calls through the iPhone app
 - [AntennaHeadUninstaller](https://github.com/dsward2/AntennaHeadUninstaller) — small macOS app that moves AntennaHead, ControlBooth and their data to the Trash (Put Back works), for cleaning a Mac between test installs
+- [StationDirector](https://github.com/dsward2/StationDirector) — prototype personal radio-station automation (CLI): Music.app playlists through AntennaHead with a synthesized announcer, headlines and NWS weather. Design: [STATION_AUTOMATION_DESIGN.md](STATION_AUTOMATION_DESIGN.md)
 
 ## Reference docs
 
