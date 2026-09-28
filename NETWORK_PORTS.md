@@ -26,7 +26,9 @@ intended to be LAN-reachable.
 | 6027 | UDP | Filler-announcement feeder (`PCMSpeechSynth → sox → PCMUDPSender`) → the filler `PCMMixer`'s input 1 — 48 kHz/2 ch S16LE of the periodic spoken announcement, which drives the mixer's sidechain ducking of the filler bed | No — fixed constant, not in Configuration UI | `AntennaHead/Services/SDRController.swift` (`fillerAnnouncePCMPort`), `PipelineHelpers/Sources/PCMMixer/main.swift` |
 | 6028 | UDP | AntennaHead → the filler `PCMMixer`'s control port — `gain` / `ratio` and (unused at rest) duck retuning; the duck parameters are passed as `--duck-*` args at launch | No — fixed constant, not in Configuration UI | `AntennaHead/Services/SDRController.swift` (`fillerMixerControlPort`), `PipelineHelpers/Sources/PCMMixer/main.swift` |
 | 6029 | UDP | AntennaHead → its optional `PCMDelay` stage — live `delay <seconds>` updates from the Configuration › Audio Delay slider (loopback only) | No — fixed constant, not in Configuration UI | `AntennaHead/Services/SDRController.swift` (`audioDelayControlPort`), `PipelineHelpers/Sources/PCMDelay/main.swift` |
-| 6030–6033 | UDP | Reserved for the planned station automation (announcer text in, AirPlay relay target, announcer PCM, mixer control) — not opened by any shipped code yet | — | `STATION_AUTOMATION_DESIGN.md` |
+| 6031 | UDP | StationDirector's `PCMUDPReceiver --fill-silence` — music bed from ControlBooth's AirPlay relay (set ControlBooth's AirPlay Destination Port to 6031) | Yes (`station.json` `ports.musicIn`) | `StationDirector/Sources/StationDirector/AudioGraph.swift`, `Config.swift` |
+| 6032 | UDP | StationDirector announcer → the station `PCMMixer`'s input 1 (ducking sidechain), 48 kHz/2 ch S16LE | Yes (`ports.announcerIn`) | `StationDirector/Sources/StationDirector/Announcer.swift` |
+| 6033 | UDP | StationDirector → the station `PCMMixer`'s control port (`gain 0 <g>` mutes/fades the music for clock segments) | Yes (`ports.mixerControl`) | `StationDirector/Sources/StationDirector/AudioGraph.swift` |
 | 6034 | UDP | ControlBooth's embedded AirPlay receiver → its `PCMUDPSender` stage's `--control-port` — live `relay on` / `relay off` / `relay?` for the Not in Use / Receiving / Receiving & Relayed modes. Bound on all interfaces (`INADDR_ANY`), but only ever sent to from loopback. Moved from 6029, which collided with `PCMDelay` (see notes) | No — fixed constant | `AirPlayReceiver/Sources/AirPlayReceiver/AirPlayReceiverController.swift` (`relayControlPort`), `PipelineHelpers/Sources/PCMUDPSender/main.swift` |
 | 8080 | TCP | LiveAudioServer HTTP stream (MP3/AAC/HLS) + status page | Yes (`-p/--port`) | `LiveAudioServerCore/Config.swift:58`; `AntennaHead/Services/LiveAudioServerProcessManager.swift:48`, `LiveAudioServerClient.swift:26` |
 | 8090 | TCP | AntennaHead's own web UI (HTTP), Bonjour-advertised as `_http._tcp` | Yes | `AntennaHead/Services/AntennaHeadHTTPServer.swift:19` |
@@ -60,6 +62,9 @@ intended to be LAN-reachable.
 | Filler-announcement feeder → filler `PCMMixer` input 1 (ducking sidechain) | S16LE 48 kHz/2 ch PCM | UDP 6027 |
 | AntennaHead → filler `PCMMixer` control | `gain` / `ratio` ASCII lines | UDP 6028 |
 | AntennaHead Configuration → `PCMDelay` stage (audio delay) | `delay` ASCII lines | UDP 6029 |
+| ControlBooth AirPlay relay → StationDirector music bed | S16LE 48 kHz/2 ch PCM | UDP 6031 |
+| StationDirector announcer → station `PCMMixer` input 1 | S16LE 48 kHz/2 ch PCM | UDP 6032 |
+| StationDirector → station `PCMMixer` control | `gain` ASCII lines | UDP 6033 |
 | ControlBooth AirPlay receiver → its `PCMUDPSender` stage (relay on/off) | `relay` ASCII lines | UDP 6034 |
 | Browser/phone → AntennaHead web UI | HTTP/HTTPS, Bonjour `_http._tcp`/`_https._tcp` | TCP 8090 / 8094 |
 | Browser/phone → LiveAudioServer stream | HTTP/HTTPS, optional Bonjour (`_http._tcp`/`_https._tcp`, `_liveaudio-pcm` for inputs) | TCP 8080 / 8443 |
